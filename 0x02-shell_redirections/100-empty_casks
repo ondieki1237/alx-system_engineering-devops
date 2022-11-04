@@ -1,2 +1,2 @@
 #!/bin/bash
-find test -depth -empty -ls
+find ./ -type f&d -empty
