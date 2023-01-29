@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
-hours=0
-minutes=0
+HOUR=0
+MIN=0
+while [ $HOUR -le 12 ]; do
 
-while [ $hours -lt 12 ] || [ $minutes -lt 59 ]; do
-  if [ $minutes -lt 59 ]; then
-    minutes=$((minutes+1))
-  else
-    hours=$((hours+1))
-    minutes=0
-  fi
-  printf "%02d:%02d\n" $hours $minutes
+	echo "Hour: $HOUR"
+	(( MIN = 1 ))
+
+	while [ $MIN -le 59 ]; do
+		echo "$MIN"
+		(( MIN++))
+	done
+	(( HOUR++ ))
+
 done
