@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Get the list of all processes
+processes=$(ps -eo pid,comm)
+
+# Loop through each process
+while read -r line; do
+  # Extract PID and process name
+  pid=$(echo "$line" | awk '{print $1}')
+  process_name=$(echo "$line" | awk '{print $2}')
+
+  # Check if process name contains "bash"
+  if [[ "$process_name" == *"bash"* ]]; then
+    # Print PID and process name
+    echo "PID: $pid, Process Name: $process_name"
+  fi
+done <<< "$processes"
