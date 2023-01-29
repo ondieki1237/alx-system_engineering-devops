@@ -1,17 +1,12 @@
 #i/usr/bin/env bash
 # the script prints 1 to 20 with some excptions
-#!/bin/bash
-
 i=1
 while [ $i -le 20 ]; do
-  if [ $i -eq 4 ]; then
-    echo "4 bad luck from China"
-  elif [ $i -eq 9 ]; then
-    echo "9 bad luck from Japan"
-  elif [ $i -eq 17 ]; then
-    echo "17 bad luck from Italy"
-  else
-    echo $i
-  fi
+  case $i in 
+    4) echo "4 bad luck from China";;
+    9) echo "9 bad luck from Japan";;
+    17) echo "17 bad luck from Italy";;
+    *) echo $i;;
+  esac
   i=$((i+1))
 done
