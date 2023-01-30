@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# killing it using the second silent killer
+pkill -f "./7-highlander"

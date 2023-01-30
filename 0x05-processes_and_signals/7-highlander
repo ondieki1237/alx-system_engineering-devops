@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# it is an invisible one but having a sleep of 2
+trap "echo 'I am invincible!!!'; exit 0" SIGTERM
+
+while true; do
+  echo "To infinity and beyond"
+  sleep 2
+done
