@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # Get the list of all processes
 processes=$(ps -eo pid,comm)
-
 # Loop through each process
 while read -r line; do
   # Extract PID and process name
