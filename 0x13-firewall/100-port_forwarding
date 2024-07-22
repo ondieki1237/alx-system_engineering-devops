@@ -1,0 +1,27 @@
+   94  sudo apt update
+   95  sudo apt install ufw
+   96  sudo ufw default deny incoming
+   97  sudo ufw default allow outgoing
+   98  sudo ufw default deny incoming
+   99  sudo ufw default allow outgoing
+  100  sudo ufw allow 22/tcp
+  101  sudo ufw allow 443/tcp
+  102  sudo ufw allow 80/tcp
+  103  ls
+  104  sudo ufw default deny incoming
+  105  sudo ufw default allow outgoing
+  106  sudo ufw enable
+  107  sudo ufw status verbose
+  108  history
+  109  sudo nano /etc/ufw/before.rules
+  110  ls
+  111  sudo ufw disable
+  112  sudo ufw enable
+  113  ls
+  114  sudo ufw status verbose
+  115  sudo vi /etc/ufw/before.rules
+  116  ls
+  117  sudo iptables -t nat -A PREROUTING -p tcp --dport 8080 -j DNAT --to-destination :80 -i web-01
+  118  sudo apt install net-tools
+  119  ls
+  120  history
