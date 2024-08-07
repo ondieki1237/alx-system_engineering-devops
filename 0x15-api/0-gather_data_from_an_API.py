@@ -1,37 +1,30 @@
 #!/usr/bin/python3
+"""For a given employee ID, returns information about
+their TODO list progress"""
 
-"""
-Python script that, using a REST API, for a given employee ID,
-returns information about his/her TODO list progress.
-"""
-
-from requests import get
-from sys import argv
-
+import requests
+import sys
 
 if __name__ == "__main__":
-        response = get('https://jsonplaceholder.typicode.com/todos/')
-            data = response.json()
-                completed = 0
-                    total = 0
-                        tasks = []
-                            response2 = get('https://jsonplaceholder.typicode.com/users')
-                                data2 = response2.json()
 
-                                    for i in data2:
-                                                if i.get('id') == int(argv[1]):
-                                                                employee = i.get('name')
+    userId = sys.argv[1]
+    user = requests.get("https://jsonplaceholder.typicode.com/users/{}"
+                        .format(userId))
 
-                                                                    for i in data:
-                                                                                if i.get('userId') == int(argv[1]):
-                                                                                                total += 1
+    name = user.json().get('name')
 
-                                                                                                            if i.get('completed') is True:
-                                                                                                                                completed += 1
-                                                                                                                                                tasks.append(i.get('title'))
+    todos = requests.get('https://jsonplaceholder.typicode.com/todos')
+    totalTasks = 0
+    completed = 0
 
-                                                                                                                                                    print("Employee {} is done with tasks({}/{}):".format(employee, completed,
-                                                                                                                                                                                                                  total))
+    for task in todos.json():
+        if task.get('userId') == int(userId):
+            totalTasks += 1
+            if task.get('completed'):
+                completed += 1
 
-                                                                                                                                                        for i in tasks:
-                                                                                                                                                                    print("\t {}".format(i))
+    print('Employee {} is done with tasks({}/{}):'
+          .format(name, completed, totalTasks))
+
+    print('\n'.join(["\t " + task.get('title') for task in todos.json()
+          if task.get('userId') == int(userId) and task.get('completed')]))
