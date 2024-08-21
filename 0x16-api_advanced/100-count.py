@@ -1,45 +1,45 @@
-#!/usr/bin/python3
-# get subs
-from requests import get
-from sys import argv
+import requests
+import re
 
-hotlist = []
-after = None
+def count_words(subreddit, word_list, after=None, counts=None):
+    """
+    Recursively fetch Reddit hot articles and count keywords.
+    """
+    if counts is None:
+        counts = {word.lower(): 0 for word in word_list}
 
-
-def count_all(hotlist, word_list):
-    count_dic = {word.lower(): 0 for word in word_list}
-    for title in hotlist:
-        words = title.split(' ')
-        for word in words:
-            if count_dic.get(word) is not None:
-                count_dic[word] += 1
-
-    for key in sorted(count_dic, key=count_dic.get, reverse=True):
-        if count_dic.get(key):
-            for thing in word_list:
-                if key == thing.lower():
-                    print("{}: {}".format(thing, count_dic[key]))
-
-
-def count_words(subreddit, word_list):
-    global hotlist
-    global after
-    """subs"""
-    head = {'User-Agent': 'Dan Kazam'}
+    url = f"https://reddit.com/r/{subreddit}/hot.json"
+    headers = {'User-Agent': 'Mozilla/5.0'}
+    params = {'after': after} if after else {}
+    
+    response = requests.get(url, headers=headers, params=params)
+    
+    if response.status_code != 200:
+        return
+    
+    data = response.json()
+    
+    if 'data' not in data or 'children' not in data['data']:
+        return
+    
+    articles = data['data']['children']
+    after = data['data']['after']
+    
+    for article in articles:
+        title = article['data']['title']
+        title_lower = title.lower()
+        
+        for word in counts.keys():
+            # Count exact matches
+            counts[word] += len(re.findall(r'\b{}\b'.format(re.escape(word)), title_lower))
+    
     if after:
-        count = get('https://www.reddit.com/r/{}/hot.json?after={}'.format(
-            subreddit, after), headers=head).json().get('data')
+        count_words(subreddit, word_list, after, counts)
     else:
-        count = get('https://www.reddit.com/r/{}/hot.json'.format(
-            subreddit), headers=head).json().get('data')
-    hotlist += [dic.get('data').get('title').lower()
-                for dic in count.get('children')]
-    after = count.get('after')
-    if after:
-        return count_words(subreddit, word_list)
-    return count_all(hotlist, word_list)
+        sorted_counts = sorted(counts.items(), key=lambda x: (-x[1], x[0]))
+        
+        for word, count in sorted_counts:
+            if count > 0:
+                print(f"{word}: {count}")
 
 
-if __name__ == "__main__":
-    count_words(argv[1], argv[2].split(' '))
